@@ -75,7 +75,9 @@ document.querySelector(".btn-hold").addEventListener("click", function() {
 	if (gamePlaying) {
 		scores[activePlayer] += roundScore;
 		document.getElementById("score-" + activePlayer).textContent = scores[activePlayer];
-		if (scores[activePlayer] >= 20) {
+		var input = document.querySelector(".final-score").value;
+		var winningScore = input > 0 ? input: 100;
+		if (scores[activePlayer] >= winningScore) {
 			document.getElementById("name-" + activePlayer).textContent = "Winner! ";
 			document.querySelector(".dice").style.display = "none";
 
