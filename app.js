@@ -15,6 +15,8 @@ var scores, roundScore, activePlayer, gamePlaying;
 
 initGame();
 
+var lastDice;
+
 function initGame() {
 	gamePlaying = true;
 	scores = [0, 0];
@@ -48,19 +50,24 @@ function changeNextPlayer() {
 document.querySelector(".btn-roll").addEventListener("click", function() {
 	if (gamePlaying) {
 		var dice = Math.floor(Math.random() * 6 + 1);
-		var activePlayerDOM = document.getElementById(
-			"current-" + activePlayer
-		);
+		var activePlayerDOM = document.getElementById("current-" + activePlayer);
 		var diceDOM = document.querySelector(".dice");
 		diceDOM.style.display = "block";
 		diceDOM.src = "dice-" + dice + ".png";
-		if (dice !== BAD_NUMBER) {
+
+		if(dice === 6 && lastDice === 6){
+			scores[activePlayer] = 0;
+			document.getElementById("score-" + activePlayer).textContent = "0";
+			changeNextPlayer();
+
+		} else if (dice !== BAD_NUMBER) {
 			roundScore += dice;
 			activePlayerDOM.textContent = roundScore;
 		} else {
 			activePlayerDOM.textContent = 0;
 			changeNextPlayer();
 		}
+		lastDice = dice;
 	}
 });
 
