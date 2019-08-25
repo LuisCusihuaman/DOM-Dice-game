@@ -33,3 +33,39 @@ function initGame() {
 	document.querySelector(".player-1-panel").classList.remove("active");
 	document.querySelector(".player-0-panel").classList.add("active");
 }
+
+
+function changeNextPlayer() {
+	roundScore = 0;
+	document
+		.querySelector(".player-" + activePlayer + "-panel")
+		.classList.remove("active");
+
+	activePlayer = activePlayer === PLAYER_ONE ? PLAYER_TWO : PLAYER_ONE;
+
+	document
+		.querySelector(".player-" + activePlayer + "-panel")
+		.classList.add("active");
+
+	document.querySelector(".dice").style.display = "none";
+}
+
+
+document.querySelector(".btn-roll").addEventListener("click", function() {
+	if (gamePlaying) {
+		var dice = Math.floor(Math.random() * 6 + 1);
+		var activePlayerDOM = document.getElementById(
+			"current-" + activePlayer
+		);
+		var diceDOM = document.querySelector(".dice");
+		diceDOM.style.display = "block";
+		diceDOM.src = "dice-" + dice + ".png";
+		if (dice !== BAD_NUMBER) {
+			roundScore += dice;
+			activePlayerDOM.textContent = roundScore;
+		} else {
+			activePlayerDOM.textContent = 0;
+			changeNextPlayer();
+		}
+	}
+});
