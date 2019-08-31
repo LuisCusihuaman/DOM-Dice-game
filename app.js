@@ -60,7 +60,7 @@ document.querySelector(".btn-roll").addEventListener("click", function() {
 			document.getElementById("score-" + activePlayer).textContent = "0";
 			changeNextPlayer();
 
-		} else if (dice1 !== BAD_NUMBER && dice2 !== BAD_NUMBER) {
+		} else if (dice1 !== BAD_NUMBER) {
 			roundScore += dice1 + dice2;
 			activePlayerDOM.textContent = roundScore;
 		} else {
