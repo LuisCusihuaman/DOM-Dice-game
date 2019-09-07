@@ -44,32 +44,59 @@ function changeNextPlayer() {
 	document.getElementById("dice-2").style.display = "none";
 }
 
+function showWinningPlayer(){
+	document.getElementById("name-" + activePlayer).textContent = "Winner! ";
+	document.getElementById("dice-1").style.display = "none";
+	document.getElementById("dice-2").style.display = "none";
+
+	document.querySelector(".player-" + activePlayer + "-panel").classList.add("winner");
+	document.querySelector(".player-" + activePlayer + "-panel").classList.remove("active");
+	gamePlaying = false;
+}
+
+function getDice(){
+	return Math.floor(Math.random() * 6 + 1);
+}
+
+function throwDice(dice1,dice2){
+	document.getElementById("dice-1").style.display = "block";
+	document.getElementById("dice-2").style.display = "block";
+	document.getElementById("dice-1").src = "dice-" + dice1 + ".png";
+	document.getElementById("dice-2").src = "dice-" + dice2 + ".png";
+}
+
+function losingTotalScore(){
+	scores[activePlayer] = 0;
+	document.getElementById("score-" + activePlayer).textContent = "0";
+	changeNextPlayer();
+}
+
+function losingTemporaryScore(temporaryScore){
+	temporaryScore.textContent = 0;
+	changeNextPlayer();
+}
+
+//Throw the dice and activate the game logic
 document.querySelector(".btn-roll").addEventListener("click", function() {
 	if (gamePlaying) {
-		var dice1 = Math.floor(Math.random() * 6 + 1);
-		var dice2 = Math.floor(Math.random() * 6 + 1);
+		var dice1 = getDice();
+		var dice2 = getDice();
 
 		var activePlayerDOM = document.getElementById("current-" + activePlayer);
-		document.getElementById("dice-1").style.display = "block";
-		document.getElementById("dice-2").style.display = "block";
-		document.getElementById("dice-1").src = "dice-" + dice1 + ".png";
-		document.getElementById("dice-2").src = "dice-" + dice2 + ".png";
+		throwDice(dice1,dice2);
 
 		if(dice1 === 6 && dice2 === 6){
-			scores[activePlayer] = 0;
-			document.getElementById("score-" + activePlayer).textContent = "0";
-			changeNextPlayer();
-
+			losingTotalScore();
 		} else if (dice1 !== BAD_NUMBER) {
 			roundScore += dice1 + dice2;
 			activePlayerDOM.textContent = roundScore;
 		} else {
-			activePlayerDOM.textContent = 0;
-			changeNextPlayer();
+			losingTemporaryScore(activePlayerDOM);
 		}
 	}
 });
 
+//Save the temporary score and change players
 document.querySelector(".btn-hold").addEventListener("click", function() {
 	if (gamePlaying) {
 		scores[activePlayer] += roundScore;
@@ -77,16 +104,12 @@ document.querySelector(".btn-hold").addEventListener("click", function() {
 		var input = document.querySelector(".final-score").value;
 		var winningScore = input > 0 ? input: 100;
 		if (scores[activePlayer] >= winningScore) {
-			document.getElementById("name-" + activePlayer).textContent = "Winner! ";
-			document.getElementById("dice-1").style.display = "none";
-			document.getElementById("dice-2").style.display = "none";
-
-			document.querySelector(".player-" + activePlayer + "-panel").classList.add("winner");
-			document.querySelector(".player-" + activePlayer + "-panel").classList.remove("active");
-			gamePlaying = false;
+			showWinningPlayer();
 		} else {
 			changeNextPlayer();
 		}
 	}
 });
+
+//Start a new game
 document.querySelector(".btn-new").addEventListener("click", initGame);
